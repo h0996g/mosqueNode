@@ -2,8 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const ObjectId = mongoose.Types.ObjectId;
 
-
-
 const userSchema = new mongoose.Schema({
     nom: {
         type: String,
@@ -34,10 +32,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-
+    commants: [{
+        lesson: {
+            type: ObjectId, required: false,
+            ref: "Lesson"
+        },
+        commant: {
+            type: String
+        }
+    }],
 }, { timestamps: true })
-
-
 userSchema.pre("save", async function () {
     var joueur = this;
     if (!joueur.isModified("mot_de_passe")) {
@@ -52,8 +56,6 @@ userSchema.pre("save", async function () {
         throw err;
     }
 }, { timestamps: true });
-
-
 //used while signIn decrypt
 userSchema.methods.compareMot_de_passe = async function (candidateMot_de_passe) {
     try {
@@ -65,8 +67,5 @@ userSchema.methods.compareMot_de_passe = async function (candidateMot_de_passe) 
         throw error;
     }
 };
-
-
-
 const User = mongoose.model('User', userSchema)
 module.exports = User   
