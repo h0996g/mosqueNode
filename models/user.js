@@ -14,7 +14,6 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true
-
     },
     telephone: {
         type: Number
@@ -41,17 +40,23 @@ const userSchema = new mongoose.Schema({
             type: String
         }
     }],
+}, {
+    toJSON: {
+        transform: function (doc, ret) {
+            delete ret.mot_de_passe;
+        }
+    }
 }, { timestamps: true })
 userSchema.pre("save", async function () {
-    var joueur = this;
-    if (!joueur.isModified("mot_de_passe")) {
+    var user = this;
+    if (!user.isModified("mot_de_passe")) {
         return
     }
     try {
         const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(joueur.mot_de_passe, salt);
+        const hash = await bcrypt.hash(user.mot_de_passe, salt);
 
-        joueur.mot_de_passe = hash;
+        user.mot_de_passe = hash;
     } catch (err) {
         throw err;
     }
