@@ -1,31 +1,31 @@
-const user = require('../models/user');
+const admin = require('../models/admin');
 
 const jwt = require("jsonwebtoken");
 
-class UserServices {
+class AdminServices {
 
-    static async registerUser(email, mot_de_passe, nom, telephone, age, photo, prenom) {
+    static async registerAdmin(email, mot_de_passe, nom, telephone, age, photo, prenom) {
         try {
             console.log("-----Email --- Password-----", email, mot_de_passe, nom, telephone, age, photo, prenom);
 
-            const createUser = new user({ email, mot_de_passe, nom, telephone, age, photo, prenom });
-            return await createUser.save();
+            const createAdmin = new admin({ email, mot_de_passe, nom, telephone, age, photo, prenom });
+            return await createAdmin.save();
         } catch (err) {
             throw err;
         }
     }
 
-    static async getUserByEmail(email) {
+    static async getAdminByEmail(email) {
         try {
-            return await user.findOne({ email });
+            return await admin.findOne({ email });
         } catch (err) {
             console.log(err);
         }
     }
 
-    static async checkUser(email) {
+    static async checkAdmin(email) {
         try {
-            return await user.findOne({ email });
+            return await admin.findOne({ email });
         } catch (error) {
             throw error;
         }
@@ -36,4 +36,4 @@ class UserServices {
     }
 }
 
-module.exports = UserServices;
+module.exports = AdminServices;

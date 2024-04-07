@@ -1,6 +1,8 @@
 const express = require('express');
-const userController = require('../controllers/userController')
-const { protect } = require('../handler/auth');
+
+const userController = require('../controllers/userController');
+const adminController = require('../controllers/adminController');
+const { protect, isAdmin } = require('../handler/auth');
 
 const router = express.Router();
 router.get('/', async (req, res) => {
@@ -8,16 +10,60 @@ router.get('/', async (req, res) => {
 
 })
 
-// ---------------------User---------------------------------------------
+// users----------------------------------------------------------------
+router.get('/user', userController.loginUser)
+router.get('/user/myinformation', protect, userController.getMyInformation)
 
-// router.get('/user', userController.loginUser)
 router.post('/loginuser', userController.loginUser)
-
 router.post('/user', userController.createUser)
 
+// Update a user
+router.put('/user', protect, userController.updateUser);
+
+// Get a user by ID
+router.get('/user/:id', userController.getUserById);
+
+// Get all users
+router.get('/users', userController.getAllUsers);
+
+// Filter users
+router.get('/users/filter', userController.filterUsers);
+
+
+router.put('/users/password', protect, userController.updatePassword);
+
+
+router.delete('/user/:id', userController.deleteUser);
+router.post('/user/recoverpassword', userController.recoverPassword);
+router.post('/users/verifytoken', userController.verifyToken);
+router.post('/user/resetpassword', userController.resetPassword);
 
 // ---------------------admin---------------------------------------------
-// router.get('/admin', adminController.loginAdmin)
-// router.post('/admin', adminController.createAdmin)
+router.post('/loginadmin', adminController.loginAdmin)
+router.post('/admin', adminController.createAdmin)
+router.get('/admin/myinformation', protect, isAdmin, adminController.getMyInformation)
+
+// Update an admin (with token verification)
+router.put('/admin', protect, adminController.updateAdmin);
+
+// Get an admin by ID
+router.get('/admin/:id', adminController.getAdminById);
+
+// Get all admins
+router.get('/admins', adminController.getAllAdmins);
+
+// Filter admins
+router.get('/admins/filter', adminController.filterAdmins);
+
+// Update admin password
+router.put('/admins/password', protect, adminController.updatePassword);
+
+router.delete('/admin/:id', adminController.deleteAdmin);
+
+
+router.post('/admin/recoverpassword', adminController.recoverPassword);
+router.post('/admins/verifytoken', adminController.verifyToken);
+router.post('/admin/resetpassword', adminController.resetPassword);
+
 
 module.exports = router;
