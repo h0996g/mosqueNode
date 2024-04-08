@@ -36,7 +36,15 @@ const userSchema = new mongoose.Schema({
         required: false
     },
 
-
+    commants: [{
+        lesson: {
+            type: ObjectId, required: false,
+            ref: "Lesson"
+        },
+        commant: {
+            type: String
+        }
+    }],
 
 }, {
     toJSON: {

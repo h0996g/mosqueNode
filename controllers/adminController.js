@@ -9,14 +9,14 @@ const bcrypt = require("bcrypt");
 exports.createAdmin = async (req, res, next) => {
     try {
         console.log("---req body---", req.body);
-        const { email, mot_de_passe, nom, prenom, telephone, wilaya, photo } = req.body;
+        const { email, mot_de_passe, nom, telephone, age, photo, prenom } = req.body;
         const duplicate = await AdminServices.getAdminByEmail(email);
         if (duplicate) {
             // throw new Error(`this ${email}, Already Registered`)
             return res.status(400).json({ status: false, message: `L'email ${email} est déjà enregistré` });
         }
 
-        const admin = await AdminServices.registerAdmin(email, mot_de_passe, nom, prenom, telephone, wilaya, photo);
+        const admin = await AdminServices.registerAdmin(email, mot_de_passe, nom, telephone, age, photo, prenom);
 
         let tokenData;
         tokenData = { _id: admin._id, email: email, role: "admin" };
