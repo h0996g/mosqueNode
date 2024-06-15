@@ -2,50 +2,23 @@ const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const ObjectId = mongoose.Types.ObjectId;
 
-
-
 const userSchema = new mongoose.Schema({
-    nom: {
-        type: String,
-        required: true
-    },
-    prenom: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
-
-    },
-    telephone: {
-        type: Number
-    },
-    mot_de_passe: {
-        type: String,
-        required: true
-    },
-    age: {
-        type: Number,
-        required: true
-    },
-
-
-    photo: {
-        type: String,
-        required: false
-    },
-
+    username: { type: String, required: true, unique: true },
+    nom: { type: String, required: true },
+    prenom: { type: String, required: true },
+    email: { type: String, required: true },
+    telephone: { type: Number },
+    mot_de_passe: { type: String, required: true },
+    age: { type: Number, required: true },
+    photo: { type: String, required: false },
     commants: [{
-        lesson: {
-            type: ObjectId, required: false,
-            ref: "Lesson"
-        },
-        commant: {
-            type: String
-        }
+        lesson: { type: ObjectId, required: false, ref: "Lesson" },
+        commant: { type: String }
     }],
-
+    sectionProgress: [{
+        section: { type: ObjectId, ref: "Section" },
+        completedLessons: [{ type: ObjectId, ref: "Lesson" }]
+    }],
 }, {
     toJSON: {
         transform: function (doc, ret) {

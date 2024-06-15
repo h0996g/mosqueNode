@@ -2,49 +2,20 @@ const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const ObjectId = mongoose.Types.ObjectId;
 
-
 const adminSchema = new mongoose.Schema({
-    nom: {
-        type: String,
-        required: true
-    },
-    prenom: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
-
-    },
-    telephone: {
-        type: Number,
-        require: true
-    },
-    mot_de_passe: {
-        type: String,
-        required: true
-    },
-    age: {
-        type: Number,
-        required: true
-    },
-
-    photo: {
-        type: String,
-        // required: true
-    },
+    username: { type: String, required: true, unique: true },
+    nom: { type: String, required: true },
+    prenom: { type: String, required: true },
+    email: { type: String, required: true },
+    telephone: { type: Number, require: true },
+    mot_de_passe: { type: String, required: true },
+    age: { type: Number, required: true },
+    photo: { type: String, },
 
     commants: [{
-        lesson: {
-            type: ObjectId, required: false,
-            ref: "Lesson"
-        },
-        commant: {
-            type: String
-        }
+        lesson: { type: ObjectId, required: false, ref: "Lesson" },
+        commant: { type: String }
     }],
-
 
 }, {
     toJSON: {
@@ -79,8 +50,6 @@ adminSchema.methods.compareMot_de_passe = async function (candidateMot_de_passe)
         throw error;
     }
 };
-
-
 
 const Admin = mongoose.model('Admin', adminSchema);
 module.exports = Admin;

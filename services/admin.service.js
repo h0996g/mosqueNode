@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 
 class AdminServices {
 
-    static async registerAdmin(email, mot_de_passe, nom, telephone, age, photo, prenom) {
+    static async registerAdmin(email, mot_de_passe, nom, telephone, age, photo, prenom, username) {
         try {
-            console.log("-----Email --- Password-----", email, mot_de_passe, nom, telephone, age, photo, prenom);
+            console.log("-----Email --- Password-----", email, mot_de_passe, nom, telephone, age, photo, prenom, username);
 
-            const createAdmin = new admin({ email, mot_de_passe, nom, telephone, age, photo, prenom });
+            const createAdmin = new admin({ email, mot_de_passe, nom, telephone, age, photo, prenom, username });
             return await createAdmin.save();
         } catch (err) {
             throw err;

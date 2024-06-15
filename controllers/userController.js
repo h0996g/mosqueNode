@@ -10,14 +10,14 @@ const bcrypt = require("bcrypt");
 exports.createUser = async (req, res, next) => {
     try {
         console.log("---req body---", req.body);
-        const { email, mot_de_passe, nom, telephone, age, poste, wilaya, photo, prenom } = req.body;
+        const { email, mot_de_passe, nom, telephone, age, poste, wilaya, photo, prenom, username } = req.body;
         const duplicate = await UserServices.getUserByEmail(email);
         if (duplicate) {
             // throw new Error(`Etudient Name ${email}, Already Registered`)
             return res.status(400).json({ status: false, message: `L'email ${email} est déjà enregistré` });
         }
 
-        const user = await UserServices.registerUser(email, mot_de_passe, nom, telephone, age, poste, wilaya, photo, prenom);
+        const user = await UserServices.registerUser(email, mot_de_passe, nom, telephone, age, poste, wilaya, photo, prenom, username);
 
         let tokenData;
         tokenData = { _id: user._id, email: email, role: "user" };
