@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     nom: { type: String, required: true },
     prenom: { type: String, required: true },
     email: { type: String, required: true },
-    telephone: { type: Number },
+    telephone: { type: String },
     mot_de_passe: { type: String, required: true },
     age: { type: Number, required: true },
     photo: { type: String, required: false },
@@ -17,7 +17,8 @@ const userSchema = new mongoose.Schema({
     }],
     sectionProgress: [{
         section: { type: ObjectId, ref: "Section" },
-        completedLessons: [{ type: ObjectId, ref: "Lesson" }]
+        completedLessons: [{ type: ObjectId, ref: "Lesson" }, { score: { type: Number } }]
+
     }],
 }, {
     toJSON: {
