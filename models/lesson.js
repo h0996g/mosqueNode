@@ -9,12 +9,15 @@ const lessonSchema = new mongoose.Schema({
     photo: { type: String, required: false },
     urlVideo: { type: String, required: true },
     description: { type: String, required: true },
+    suplemmentPdf: { type: String, required: false },
+    duration: { type: String, required: true },
     quize: [{
         question: { type: String, },
-        answers: [{
-            answer: { type: String },
-            isTrue: { type: Boolean }
-        }]
+        correctAnswerIndex: [Number],
+        options: [
+            String,
+
+        ]
     }],
     commants: [{
         user: { type: ObjectId, required: false, refPath: 'commants.onModel' },

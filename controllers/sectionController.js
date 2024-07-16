@@ -11,7 +11,7 @@ exports.createSection = async (req, res) => {
 
 exports.getAllSections = async (req, res) => {
     try {
-        const sections = await Section.find().populate('lesson');
+        const sections = await Section.find();
         res.status(200).json(sections);
     } catch (error) {
         res.status(400).json({ error: error.message });

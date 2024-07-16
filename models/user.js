@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     }],
     sectionProgress: [{
         section: { type: ObjectId, ref: "Section" },
-        completedLessons: [{ type: ObjectId, ref: "Lesson" }, { score: { type: Number } }]
+        completedLessons: [{ lesson: { type: ObjectId, ref: "Lesson" }, score: { type: Number } }]
 
     }],
 }, {

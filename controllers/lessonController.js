@@ -1,4 +1,5 @@
 const Lesson = require('../models/lesson');
+const User = require('../models/user');
 
 exports.createLesson = async (req, res) => {
     try {
@@ -45,5 +46,56 @@ exports.deleteLesson = async (req, res) => {
         res.status(204).send();
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+};
+
+
+// Function to set section progress for a user
+exports.setSectionProgress = async (req, res) => {
+    try {
+        const { sectionId, lessonId, score } = req.body;
+        const userId = req.user._id;
+        // Find the user by ID
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Find the section progress for the given section
+        let sectionProgress = user.sectionProgress.find(
+            (progress) => progress.section.toString() === sectionId
+        );
+
+        if (!sectionProgress) {
+            // If section progress doesn't exist, create a new one with the completed lesson and score
+            sectionProgress = {
+                section: sectionId,
+                completedLessons: [{ _id: lessonId, score: score }],
+            };
+            user.sectionProgress.push(sectionProgress);
+        } else {
+            // If section progress exists, check if the lesson is already completed
+            const completedLesson = sectionProgress.completedLessons.find(
+                (lesson) => lesson._id.toString() === lessonId
+            );
+            console.log(completedLesson);
+
+            if (!completedLesson) {
+                // If lesson is not completed, add it to the completedLessons array
+                sectionProgress.completedLessons.push({ _id: lessonId, score });
+            } else {
+                // If lesson is already completed, update the score
+                completedLesson.score = score;
+            }
+        }
+
+        // Save the updated user
+        await user.save();
+
+        res.status(200).json({ sectionProgress: user.sectionProgress });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 };
