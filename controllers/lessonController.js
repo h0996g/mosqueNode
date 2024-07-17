@@ -1,5 +1,6 @@
 const Lesson = require('../models/lesson');
 const User = require('../models/user');
+const Admin = require('../models/admin');
 
 exports.createLesson = async (req, res) => {
     try {
@@ -99,3 +100,28 @@ exports.setSectionProgress = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+exports.addComment = async (req, res) => {
+    try {
+        const { comment, onModel } = req.body;
+        let userId;
+        if (onModel === 'User') {
+            userId = req.user._id;
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+        } else if (onModel === 'Admin') {
+            userId = req.user._id;
+            const admin = await Admin.findById(userId);
+            if (!admin) {
+                return res.status(404).json({ message: 'Admin not found' });
+            }
+        }
+        const lesson = await Lesson.findById(req.params.id);
+        lesson.comments.push({ user: userId, onModel, comment });
+        await lesson.save();
+        res.status(201).json({ comment });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}

@@ -19,10 +19,10 @@ const lessonSchema = new mongoose.Schema({
 
         ]
     }],
-    commants: [{
+    comments: [{
         user: { type: ObjectId, required: false, refPath: 'commants.onModel' },
         onModel: { type: String, required: true, enum: ['User', 'Admin'] },
-        commant: { type: String }
+        comment: { type: String }
     }]
     // commants: [{
     //     user: {
