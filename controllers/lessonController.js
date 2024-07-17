@@ -124,4 +124,14 @@ exports.addComment = async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
+
 }
+
+exports.getComments = async (req, res) => {
+    try {
+        const lesson = await Lesson.findById(req.params.id).populate('comments.user');
+        res.status(200).json(lesson.comments);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
