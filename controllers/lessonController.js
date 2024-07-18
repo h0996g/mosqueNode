@@ -135,7 +135,11 @@ exports.addComment = async (req, res) => {
 
 exports.getComments = async (req, res) => {
     try {
-        const lesson = await Lesson.findById(req.params.id).populate('comments.user');
+        const lesson = await Lesson.findById(req.params.id).select('comments').populate({
+            path: 'comments.user',
+            model: 'User',
+            select: ['username', 'photo']
+        });
         res.status(200).json(lesson.comments);
     } catch (error) {
         res.status(400).json({ error: error.message });
