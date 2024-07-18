@@ -26,48 +26,19 @@ mongoose.connect('mongodb://127.0.0.1:27017/mosque', { useNewUrlParser: true })
 
 io.on('connection', (socket) => {
     console.log('user connected', socket.id);
-
     socket.on('joinLesson', async (lessonId) => {
         socket.join(lessonId);
         console.log(`user joined lesson ${lessonId}`);
-
-        // Retrieve existing comments for the lesson from the database
-        // await mongoose.model('Lesson').findById(lessonId)
-        //     .then((lesson) => {
-        //         // Emit the existing comments to the newly joined client
-        //         socket.emit('existingComments', lesson.comments);
-        //     })
-        //     .catch((error) => {
-        //         console.error('Error retrieving existing comments:', error);
-        //     });
     });
-
-
     socket.on('leaveLesson', (lessonId) => {
         socket.leave(lessonId);
         console.log(`user left lesson ${lessonId}`);
     });
-
     socket.on('newComment', async (data) => {
         const { lessonId, comment, onModel, userId } = data;
-        // await mongoose.model('Lesson').findById(lessonId)
-        //     .then((lesson) => {
-        //         lesson.comments.push({ user: userId, onModel, comment });
-        //         return lesson.save();
-        //     })
-        //     .then((lesson) => {
-        // console.log(lesson.comments);
-        // console.log(lesson.comments[lesson.comments.length - 1]);
-        // const newComment = lesson.comments[lesson.comments.length - 1];
         const newComment = { user: new mongoose.Types.ObjectId(userId), onModel, comment };
-        // console.log(newCommentr);
         io.to(lessonId).emit('newComment', { comment: newComment });
-        // })
-        // .catch((error) => {
-        //     console.error('Error adding comment:', error);
-        // });
     });
-
     socket.on('disconnect', () => {
         console.log('socket disconnect');
     });

@@ -20,7 +20,7 @@ exports.getAllSections = async (req, res) => {
 
 exports.getSectionById = async (req, res) => {
     try {
-        const section = await Section.findById(req.params.id).populate('lesson');
+        const section = await Section.findById(req.params.id).select('-createdAt -updatedAt -__v').populate({ path: 'lesson', select: '-photo -comments -quize -createdAt -updatedAt -__v' });
         res.status(200).json(section);
     } catch (error) {
         res.status(400).json({ error: error.message });

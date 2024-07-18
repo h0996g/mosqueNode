@@ -5,12 +5,9 @@ const ObjectId = mongoose.Types.ObjectId;
 const sectionSchema = new mongoose.Schema({
     admin: { type: ObjectId, required: true, ref: "Admin" },
     photo: { type: String, required: false },
-    name: { type: String, },
+    name: { type: String, requeired: true },
     description: { type: String, required: true },
-    // resultat: [{
-    //     user: { type: ObjectId, required: false, ref: "User" },
-    //     score: { type: Number }
-    // }],
+
     lesson: [{
         type: ObjectId, required: false, ref: "Lesson"
     }],

@@ -141,3 +141,12 @@ exports.getComments = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+exports.getQuiz = async (req, res) => {
+    try {
+        const lesson = await Lesson.findById(req.params.id).select('quize');
+        res.status(200).json(lesson.quize);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
