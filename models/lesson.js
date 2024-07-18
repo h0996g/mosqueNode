@@ -24,15 +24,7 @@ const lessonSchema = new mongoose.Schema({
         onModel: { type: String, required: true, enum: ['User', 'Admin'] },
         comment: { type: String }
     }]
-    // commants: [{
-    //     user: {
-    //         type: ObjectId, required: false,
-    //         ref: "User"
-    //     },
-    //     commant: {
-    //         type: String
-    //     }
-    // }],
+
     ,
 
 }, { timestamps: true })

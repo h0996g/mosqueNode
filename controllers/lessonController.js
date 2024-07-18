@@ -117,9 +117,15 @@ exports.addComment = async (req, res) => {
                 return res.status(404).json({ message: 'Admin not found' });
             }
         }
-        const lesson = await Lesson.findById(req.params.id);
-        lesson.comments.push({ user: userId, onModel, comment });
-        await lesson.save();
+        const lesson = await Lesson.findOneAndUpdate(
+            { _id: req.params.id },
+            {
+                $push: {
+                    comments: { user: userId, onModel, comment },
+                },
+            },
+            { new: true }
+        );
         res.status(201).json({ comment });
     } catch (error) {
         res.status(400).json({ error: error.message });
