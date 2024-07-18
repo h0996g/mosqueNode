@@ -35,9 +35,10 @@ io.on('connection', (socket) => {
         console.log(`user left lesson ${lessonId}`);
     });
     socket.on('newComment', async (data) => {
-        const { lessonId, comment, onModel, userId } = data;
-        const newComment = { user: new mongoose.Types.ObjectId(userId), onModel, comment };
-        io.to(lessonId).emit('newComment', { comment: newComment });
+        const { lessonId, comment, onModel, user, createdAt } = data;
+        const newComment = { user, onModel, comment, createdAt };
+        console.log(newComment);
+        io.to(lessonId).emit('newComment', newComment);
     });
     socket.on('disconnect', () => {
         console.log('socket disconnect');

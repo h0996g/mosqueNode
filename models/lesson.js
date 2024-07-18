@@ -11,6 +11,7 @@ const lessonSchema = new mongoose.Schema({
     description: { type: String, required: true },
     suplemmentPdf: { type: String, required: false },
     duration: { type: String, required: true },
+
     quize: [{
         question: { type: String, },
         correctAnswerIndex: [Number],
@@ -22,7 +23,7 @@ const lessonSchema = new mongoose.Schema({
     comments: [{
         user: { type: mongoose.Schema.Types.ObjectId, required: false, refPath: 'commants.onModel' },
         onModel: { type: String, required: true, enum: ['User', 'Admin'] },
-        comment: { type: String }
+        comment: { type: String }, createdAt: { type: Date, default: Date.now },
     }]
 
     ,
