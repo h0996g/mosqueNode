@@ -82,8 +82,9 @@ router.get('/lesson/:id', lessonController.getLessonById);
 router.put('/lesson/:id', lessonController.updateLesson);
 router.delete('/lesson/:id', lessonController.deleteLesson);
 router.post('/lesson/complete', protect, lessonController.setSectionProgress);
-router.put('/lesson/comment/:id', protect, lessonController.addComment);
+router.post('/lesson/comment/:id', protect, lessonController.addComment);
 router.get('/lesson/comments/:id', lessonController.getComments);
 router.get('/lesson/quiz/:id', lessonController.getQuiz);
 
+router.put('/lesson/comment/:id', protect, lessonController.deleteComment);
 module.exports = router;

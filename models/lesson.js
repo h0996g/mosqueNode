@@ -23,6 +23,7 @@ const lessonSchema = new mongoose.Schema({
     comments: [{
         user: { type: mongoose.Schema.Types.ObjectId, required: false, refPath: 'commants.onModel' },
         onModel: { type: String, required: true, enum: ['User', 'Admin'] },
+        isDeleted: { type: Boolean, default: false },
         comment: { type: String }, createdAt: { type: Date, default: Date.now },
     }]
 

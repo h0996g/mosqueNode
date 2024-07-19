@@ -154,3 +154,25 @@ exports.getQuiz = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
+exports.deleteComment = async (req, res) => {
+    // delete comment and set deleted to true and remove comment String
+    try {
+        const commentId = req.body.commentId;
+        const lesson = await Lesson.findOneAndUpdate(
+            { _id: req.params.id, 'comments._id': commentId },
+            {
+                $set: {
+                    'comments.$.isDeleted': true,
+                    'comments.$.comment': '',
+                },
+            },
+            { new: true }
+        );
+        res.status(200).json({ message: 'Comment deleted successfully' });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+
+
+}
+
