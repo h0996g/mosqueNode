@@ -126,7 +126,8 @@ exports.addComment = async (req, res) => {
             },
             { new: true }
         );
-        res.status(201).json({ comment });
+        const newComment = lesson.comments[lesson.comments.length - 1];
+        res.status(201).json(newComment._id);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
