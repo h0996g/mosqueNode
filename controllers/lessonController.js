@@ -176,4 +176,17 @@ exports.deleteComment = async (req, res) => {
 
 
 }
+exports.updateQuiz = async (req, res) => {
+    try {
+        console.log(req.body.quiz);
+        const lesson = await Lesson.findByIdAndUpdate(
+            req.params.id,
+            { quize: req.body.quiz },
+            { new: true }
+        );
+        res.status(200).json(lesson.quize);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
 

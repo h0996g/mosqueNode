@@ -86,5 +86,6 @@ router.post('/lesson/comment/:id', protect, lessonController.addComment);
 router.get('/lesson/comments/:id', lessonController.getComments);
 router.get('/lesson/quiz/:id', lessonController.getQuiz);
 
+router.put('/lesson/quiz/:id', lessonController.updateQuiz);
 router.put('/lesson/comment/:id', protect, lessonController.deleteComment);
 module.exports = router;
