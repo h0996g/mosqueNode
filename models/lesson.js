@@ -38,6 +38,15 @@ lessonSchema.post('save', async function (doc, next) {
     }
 
 });
+lessonSchema.post('findOneAndDelete', async function (doc, next) {
+    try {
+        await mongoose.model('Section').updateOne({ _id: doc.section }, { $pull: { lesson: doc._id } })
+    } catch (error) {
+        console.log(error)
+    }
+
+
+});
 
 const Lesson = mongoose.model('Lesson', lessonSchema)
 module.exports = Lesson   

@@ -72,7 +72,7 @@ router.post('/section', sectionController.createSection);
 router.get('/sections', sectionController.getAllSections);
 router.get('/section/:id', sectionController.getSectionById);
 router.put('/section/:id', sectionController.updateSection);
-router.delete('/section/:id', sectionController.deleteSection);
+router.post('/section/:id', protect, sectionController.deleteSection);
 
 
 //---------------------------------Lesson-----------------------------

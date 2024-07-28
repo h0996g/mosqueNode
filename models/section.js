@@ -12,6 +12,13 @@ const sectionSchema = new mongoose.Schema({
         type: ObjectId, required: false, ref: "Lesson"
     }],
 }, { timestamps: true })
+sectionSchema.post('findOneAndDelete', async function (doc, next) {
+    try {
+        await mongoose.model('Lesson').deleteMany({ section: doc._id })
+    } catch (error) {
+        console.log(error)
+    }
+});
 
 const Section = mongoose.model('Section', sectionSchema)
 module.exports = Section   
