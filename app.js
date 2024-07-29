@@ -5,6 +5,7 @@ const options = { /* ... */ };
 const apiRouter = require('./routes/api');
 
 require('dotenv').config();
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 var cors = require('cors');
@@ -16,7 +17,10 @@ const io = require('socket.io')(server, options);
 
 mongoose.set('strictQuery', true);
 
-mongoose.connect('mongodb://127.0.0.1:27017/mosque', { useNewUrlParser: true })
+mongoose.connect(
+    ' process.env.MongoURI',
+    // 'mongodb://127.0.0.1:27017/mosque', 
+    { useNewUrlParser: true })
     .then(() => {
         console.log('Connexion réussie à la base de données');
     })
@@ -47,6 +51,6 @@ io.on('connection', (socket) => {
 
 app.use('/api', apiRouter);
 
-server.listen(3000, () => {
+server.listen(PORT, () => {
     console.log('Server started on port 3000');
 });
