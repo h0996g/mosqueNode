@@ -2,6 +2,8 @@ const Admin = require('../models/admin')
 const Token = require('../models/token')
 const User = require('../models/user')
 const AdminServices = require('../services/admin.service')
+const { ObjectId } = require('mongoose').Types;
+
 const bcrypt = require("bcrypt");
 
 
@@ -233,13 +235,78 @@ exports.deleteAdmin = async (req, res) => {
 };
 
 
+exports.showAllStudents = async (req, res) => {
+    try {
+        const users = await User.find().select('username nom prenom email photo').lean();
+        res.json(users);
+    } catch (e) {
+        console.log(e)
+        res.status(500).send(e.message);
+    }
+}
 
 
+exports.showProgressStudent = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('sectionProgress')
+            .populate({
+                path: 'sectionProgress.completedLessons',
+                populate: {
+                    path: '_id',
+                    model: 'Lesson',
+                    select: 'title'
+                }
+            })
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        res.json(user);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 
 
+}
 
+exports.showpracticeStudentSection = async (req, res) => {
+    try {
+        const users = await User.find({ 'sectionProgress.section': req.params.id, }).select('username photo sectionProgress').populate({
+            path: 'sectionProgress.completedLessons',
+            populate: {
+                path: '_id',
+                model: 'Lesson',
+                select: 'title'
+            }
+        }).lean();
+        users.forEach(user => {
+            user.sectionProgress = user.sectionProgress.filter(section => section.section.toString() === req.params.id)
+        })
+        res.json(users);
+    } catch (e) {
+        console.log(e)
+        res.status(500).send(e.message);
+    }
+}
 
+exports.showpracticeStudentLesson = async (req, res) => {
+    try {
+        const sectionID = req.body.sectionID;
+        const lessonID = req.body.lessonID; // Assuming you're passing the lesson ID in the request body
 
+        const users = await User.find({
+            'sectionProgress.section': sectionID,
+            'sectionProgress.completedLessons._id': lessonID
+        })
+            .select('username photo ')
+
+        res.json(users);
+    } catch (e) {
+        console.error('Error in showpracticeStudentLesson:', e);
+        res.status(500).send('An error occurred while fetching student lesson data');
+    }
+}
 
 exports.recoverPassword = async (req, res) => {
     try {

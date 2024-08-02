@@ -125,13 +125,38 @@ exports.getUserById = async (req, res) => {
     }
 };
 
+exports.getUserProgressById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const userProgress = await User.findById(id, 'sectionProgress').populate({
+            path: 'sectionProgress.section',
+            select: 'name description'
+        }).populate({
+            path: 'sectionProgress.completedLessons',
+            populate: {
+                path: '_id',
+                model: 'Lesson',
+                select: 'title'
+            }
+        }).lean();
+
+        if (!userProgress) {
+            return res.status(404).json({ message: 'User progress not found' });
+        }
+        res.json(userProgress.sectionProgress);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
 
 
 
 
 exports.getAllUsers = async (req, res) => {
     try {
-        const limit = parseInt(req.query.limit) || 3; // How many documents to return
+        const limit = parseInt(req.query.limit) || 30; // How many documents to return
         const query = {};
         if (req.query.cursor) {
             query._id = { $lt: new ObjectId(req.query.cursor) }

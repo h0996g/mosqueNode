@@ -18,8 +18,8 @@ const io = require('socket.io')(server, options);
 mongoose.set('strictQuery', true);
 
 mongoose.connect(
-    ' process.env.MongoURI',
-    // 'mongodb://127.0.0.1:27017/mosque', 
+    // process.env.MongoURI,
+    'mongodb://127.0.0.1:27017/mosque',
     { useNewUrlParser: true })
     .then(() => {
         console.log('Connexion réussie à la base de données');

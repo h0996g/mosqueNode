@@ -24,15 +24,16 @@ router.put('/user', protect, userController.updateUser);
 
 // Get a user by ID
 router.get('/user/:id', userController.getUserById);
+router.get('/user/progress/:id', userController.getUserProgressById);
 
 // Get all users
-router.get('/users', userController.getAllUsers);
+router.get('/users', adminController.showAllStudents);
 
 // Filter users
 router.get('/users/filter', userController.filterUsers);
 
 
-router.put('/users/password', protect, userController.updatePassword);
+router.put('/user/password', protect, userController.updatePassword);
 
 
 router.delete('/user/:id', userController.deleteUser);
@@ -58,7 +59,7 @@ router.get('/admins', adminController.getAllAdmins);
 router.get('/admins/filter', adminController.filterAdmins);
 
 // Update admin password
-router.put('/admins/password', protect, adminController.updatePassword);
+router.put('/admin/password', protect, adminController.updatePassword);
 
 router.delete('/admin/:id', adminController.deleteAdmin);
 
@@ -66,6 +67,9 @@ router.delete('/admin/:id', adminController.deleteAdmin);
 router.post('/admin/recoverpassword', adminController.recoverPassword);
 router.post('/admins/verifytoken', adminController.verifyToken);
 router.post('/admin/resetpassword', adminController.resetPassword);
+router.get('/admin/user/progress/:id', adminController.showProgressStudent);
+router.get('/admin/user/practice/section/:id', adminController.showpracticeStudentSection);
+router.get('/admin/user/practice/lesson', adminController.showpracticeStudentLesson);
 
 //---------------------------------Section-----------------------------
 router.post('/section', sectionController.createSection);
