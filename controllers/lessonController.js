@@ -116,28 +116,53 @@ exports.setSectionProgress = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-exports.addComment = async (req, res) => {
+// exports.addComment = async (req, res) => {
+//     try {
+//         const { comment, onModel } = req.body;
+//         let userId;
+//         if (onModel === 'User') {
+//             userId = req.user._id;
+//             const user = await User.findById(userId);
+//             if (!user) {
+//                 return res.status(404).json({ message: 'User not found' });
+//             }
+//         } else if (onModel === 'Admin') {
+//             userId = req.user._id;
+//             const admin = await Admin.findById(userId);
+//             if (!admin) {
+//                 return res.status(404).json({ message: 'Admin not found' });
+//             }
+//         }
+//         const lesson = await Lesson.findOneAndUpdate(
+//             { _id: req.params.id },
+//             {
+//                 $push: {
+//                     comments: { user: userId, onModel, comment },
+//                 },
+//             },
+//             { new: true }
+//         );
+//         const newComment = lesson.comments[lesson.comments.length - 1];
+//         res.status(201).json(newComment._id);
+//     } catch (error) {
+//         res.status(400).json({ error: error.message });
+//     }
+
+// }
+
+exports.addCommentUser = async (req, res) => {
     try {
-        const { comment, onModel } = req.body;
-        let userId;
-        if (onModel === 'User') {
-            userId = req.user._id;
-            const user = await User.findById(userId);
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-        } else if (onModel === 'Admin') {
-            userId = req.user._id;
-            const admin = await Admin.findById(userId);
-            if (!admin) {
-                return res.status(404).json({ message: 'Admin not found' });
-            }
+        const { comment } = req.body;
+        const userId = req.user._id;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
         const lesson = await Lesson.findOneAndUpdate(
             { _id: req.params.id },
             {
                 $push: {
-                    comments: { user: userId, onModel, comment },
+                    comments: { user: userId, comment },
                 },
             },
             { new: true }
@@ -147,16 +172,45 @@ exports.addComment = async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-
 }
+
+exports.addCommentAdmin = async (req, res) => {
+    try {
+        const { comment } = req.body;
+        const userId = req.user._id;
+        const admin = await Admin.findById(userId);
+        if (!admin) {
+            return res.status(404).json({ message: 'Admin not found' });
+        }
+        const lesson = await Lesson.findOneAndUpdate(
+            { _id: req.params.id },
+            {
+                $push: {
+                    comments: { admin: userId, comment },
+                },
+            },
+            { new: true }
+        );
+        const newComment = lesson.comments[lesson.comments.length - 1];
+        res.status(201).json(newComment._id);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
 
 exports.getComments = async (req, res) => {
     try {
         const lesson = await Lesson.findById(req.params.id).select('comments').populate({
             path: 'comments.user',
-            model: 'User',
-            select: ['username', 'photo']
-        });
+            select: 'username photo',
+
+        }).populate({
+            path: 'comments.admin',
+            select: 'username photo',
+
+        })
+
         res.status(200).json(lesson.comments);
     } catch (error) {
         res.status(400).json({ error: error.message });
