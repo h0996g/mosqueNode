@@ -1,15 +1,31 @@
 const Section = require('../models/section');
 const Admin = require('../models/admin');
-const { use } = require('../routes/api');
+// const { use } = require('../routes/api');
 
+// exports.createSection = async (req, res) => {
+//     try {
+//         const section = await Section.create(req.body);
+//         res.status(201).json(section);
+//     } catch (error) {
+//         res.status(400).json({ error: error.message });
+//     }
+// };
 exports.createSection = async (req, res) => {
     try {
-        const section = await Section.create(req.body);
+        const { photo, name, description } = req.body;
+        const newSection = {
+            admin: req.user._id,
+            photo,
+            name,
+            description,
+        };
+        const section = await Section.create(newSection);
         res.status(201).json(section);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
+
 
 exports.getAllSections = async (req, res) => {
     try {
@@ -29,17 +45,25 @@ exports.getSectionById = async (req, res) => {
     }
 };
 
+
 exports.updateSection = async (req, res) => {
     try {
-        const section = await Section.findByIdAndUpdate(req.params.id, req.body, {
+        const { photo, name, description } = req.body;
+        const section = await Section.findByIdAndUpdate(req.params.id, { name, description, photo, admin: req.user._id }, {
             new: true,
             runValidators: true
         });
+
+        if (!section) {
+            return res.status(404).json({ error: 'Section not found' });
+        }
+
         res.status(200).json(section);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
+
 
 exports.deleteSection = async (req, res) => {
     try {
@@ -56,7 +80,7 @@ exports.deleteSection = async (req, res) => {
         }
 
 
-        await Section.findByIdAndDelete(req.params.id);
+        await Section.findByIdAndDelete(req.params.id, { admin: admin_id });
         res.status(204).send();
     } catch (error) {
         res.status(400).json({ error: error.message });

@@ -181,33 +181,33 @@ exports.getAllUsers = async (req, res) => {
 
 
 
-exports.filterUsers = async (req, res) => {
-    try {
-        const limit = parseInt(req.query.limit) || 3; // How many documents to return
-        const filter = req.query; // Use the entire query object as the filter
+// exports.filterUsers = async (req, res) => {
+//     try {
+//         const limit = parseInt(req.query.limit) || 3; // How many documents to return
+//         const filter = req.query; // Use the entire query object as the filter
 
-        if (req.query.cursor) {
-            filter._id = { $lt: new ObjectId(req.query.cursor) };
-        }
+//         if (req.query.cursor) {
+//             filter._id = { $lt: new ObjectId(req.query.cursor) };
+//         }
 
-        // Fetch the documents from the database, sort by _id
-        const users = await User.find(filter).sort({ _id: -1 }).limit(limit);
+//         // Fetch the documents from the database, sort by _id
+//         const users = await User.find(filter).sort({ _id: -1 }).limit(limit);
 
-        // Determine if there's more data to fetch
-        const moreDataAvailable = users.length === limit;
+//         // Determine if there's more data to fetch
+//         const moreDataAvailable = users.length === limit;
 
-        // Optionally, you can fetch the next cursor by extracting the _id of the last document
-        const nextCursor = moreDataAvailable ? users[users.length - 1]._id : null;
+//         // Optionally, you can fetch the next cursor by extracting the _id of the last document
+//         const nextCursor = moreDataAvailable ? users[users.length - 1]._id : null;
 
-        res.json({
-            data: users,
-            moreDataAvailable,
-            nextCursor,
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+//         res.json({
+//             data: users,
+//             moreDataAvailable,
+//             nextCursor,
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
 
 
 // Update admin password

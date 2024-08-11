@@ -4,7 +4,12 @@ const Admin = require('../models/admin');
 
 exports.createLesson = async (req, res) => {
     try {
-        const lesson = await Lesson.create(req.body);
+        const { title, urlVideo, description, suplemmentPdf, duration, section } = req.body;
+        const newLesson = {
+            title, urlVideo, description, suplemmentPdf, duration, section
+        };
+
+        const lesson = await Lesson.create(newLesson);
         res.status(201).json(lesson);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -31,7 +36,14 @@ exports.getLessonById = async (req, res) => {
 
 exports.updateLesson = async (req, res) => {
     try {
-        const lesson = await Lesson.findByIdAndUpdate(req.params.id, req.body, {
+        const { title, urlVideo, description, suplemmentPdf, duration } = req.body;
+        const updateLesson = { title, urlVideo, description, suplemmentPdf, duration }
+        const section = await Lesson.findById(req.params.id).populate('section').select('section').exec();
+
+        if (section.section.admin.toString() !== req.user._id) {
+            return res.status(403).json({ message: 'You do not have permission to update this lesson' });
+        }
+        const lesson = await Lesson.findByIdAndUpdate(req.params.id, updateLesson, {
             new: true,
             runValidators: true
         });
@@ -43,6 +55,10 @@ exports.updateLesson = async (req, res) => {
 
 exports.deleteLesson = async (req, res) => {
     try {
+        const section = await Lesson.findById(req.params.id).populate('section').select('section').exec();
+        if (section.section.admin.toString() !== req.user._id) {
+            return res.status(403).json({ message: 'You do not have permission to delete this lesson' });
+        }
         await Lesson.findByIdAndDelete(req.params.id);
         res.status(204).send();
     } catch (error) {
@@ -178,7 +194,10 @@ exports.deleteComment = async (req, res) => {
 }
 exports.updateQuiz = async (req, res) => {
     try {
-        console.log(req.body.quiz);
+        const section = await Lesson.findById(req.params.id).populate('section').select('section').exec();
+        if (section.section.admin.toString() !== req.user._id) {
+            return res.status(403).json({ message: 'You do not have permission to update this lesson' });
+        }
         const lesson = await Lesson.findByIdAndUpdate(
             req.params.id,
             { quize: req.body.quiz },

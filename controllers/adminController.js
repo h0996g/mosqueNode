@@ -108,46 +108,46 @@ exports.updateAdmin = async (req, res) => {
     }
 };
 
-// Get an admin by ID
-exports.getAdminById = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const admin = await Admin.findById(id);
-        if (!admin) {
-            return res.status(404).json({ message: 'Admin not found' });
-        }
-        res.json(admin);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+// // Get an admin by ID
+// exports.getAdminById = async (req, res) => {
+//     try {
+//         const id = req.params.id;
+//         const admin = await Admin.findById(id);
+//         if (!admin) {
+//             return res.status(404).json({ message: 'Admin not found' });
+//         }
+//         res.json(admin);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
 
 
 
-exports.getAllAdmins = async (req, res) => {
-    try {
-        const limit = parseInt(req.query.limit) || 3; // How many documents to return
-        const query = {};
-        if (req.query.cursor) {
-            query._id = { $lt: new ObjectId(req.query.cursor) }
-        }
-        // Fetch the documents from the database
-        const admins = await Admin.find(query).sort({ _id: -1 }).limit(limit);
-        // Determine if there's more data to fetch
-        const moreDataAvailable = admins.length === limit;
+// exports.getAllAdmins = async (req, res) => {
+//     try {
+//         const limit = parseInt(req.query.limit) || 3; // How many documents to return
+//         const query = {};
+//         if (req.query.cursor) {
+//             query._id = { $lt: new ObjectId(req.query.cursor) }
+//         }
+//         // Fetch the documents from the database
+//         const admins = await Admin.find(query).sort({ _id: -1 }).limit(limit);
+//         // Determine if there's more data to fetch
+//         const moreDataAvailable = admins.length === limit;
 
-        // Optionally, you can fetch the next cursor by extracting the _id of the last document
-        const nextCursor = moreDataAvailable ? admins[admins.length - 1]._id : null;
+//         // Optionally, you can fetch the next cursor by extracting the _id of the last document
+//         const nextCursor = moreDataAvailable ? admins[admins.length - 1]._id : null;
 
-        res.json({
-            data: admins,
-            moreDataAvailable,
-            nextCursor,
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+//         res.json({
+//             data: admins,
+//             moreDataAvailable,
+//             nextCursor,
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
 
 
 // Filter admins
@@ -162,33 +162,33 @@ exports.getAllAdmins = async (req, res) => {
 // };
 
 
-exports.filterAdmins = async (req, res) => {
-    try {
-        const limit = parseInt(req.query.limit) || 3; // How many documents to return
-        const filter = req.query; // Use the entire query object as the filter
+// exports.filterAdmins = async (req, res) => {
+//     try {
+//         const limit = parseInt(req.query.limit) || 3; // How many documents to return
+//         const filter = req.query; // Use the entire query object as the filter
 
-        if (req.query.cursor) {
-            filter._id = { $lt: new ObjectId(req.query.cursor) };
-        }
+//         if (req.query.cursor) {
+//             filter._id = { $lt: new ObjectId(req.query.cursor) };
+//         }
 
-        // Fetch the documents from the database, sort by _id
-        const admins = await Admin.find(filter).sort({ _id: -1 }).limit(limit);
+//         // Fetch the documents from the database, sort by _id
+//         const admins = await Admin.find(filter).sort({ _id: -1 }).limit(limit);
 
-        // Determine if there's more data to fetch
-        const moreDataAvailable = admins.length === limit;
+//         // Determine if there's more data to fetch
+//         const moreDataAvailable = admins.length === limit;
 
-        // Optionally, you can fetch the next cursor by extracting the _id of the last document
-        const nextCursor = moreDataAvailable ? admins[admins.length - 1]._id : null;
+//         // Optionally, you can fetch the next cursor by extracting the _id of the last document
+//         const nextCursor = moreDataAvailable ? admins[admins.length - 1]._id : null;
 
-        res.json({
-            data: admins,
-            moreDataAvailable,
-            nextCursor,
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+//         res.json({
+//             data: admins,
+//             moreDataAvailable,
+//             nextCursor,
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
 
 
 
@@ -223,7 +223,7 @@ exports.updatePassword = async (req, res) => {
 // Delete admin by ID
 exports.deleteAdmin = async (req, res) => {
     try {
-        const adminId = req.params.id;
+        const adminId = req.user._id;
         const deletedAdmin = await Admin.deleteOne({ _id: adminId });
         if (!deletedAdmin) {
             return res.status(404).json({ message: 'Admin not found' });
@@ -246,29 +246,29 @@ exports.showAllStudents = async (req, res) => {
 }
 
 
-exports.showProgressStudent = async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id).select('sectionProgress')
-            .populate({
-                path: 'sectionProgress.completedLessons',
-                populate: {
-                    path: '_id',
-                    model: 'Lesson',
-                    select: 'title'
-                }
-            })
+// exports.showProgressStudent = async (req, res) => {
+//     try {
+//         const user = await User.findById(req.params.id).select('sectionProgress')
+//             .populate({
+//                 path: 'sectionProgress.completedLessons',
+//                 populate: {
+//                     path: '_id',
+//                     model: 'Lesson',
+//                     select: 'title'
+//                 }
+//             })
 
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
+//         if (!user) {
+//             return res.status(404).send('User not found');
+//         }
 
-        res.json(user);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
+//         res.json(user);
+//     } catch (error) {
+//         res.status(500).send(error.message);
+//     }
 
 
-}
+// }
 
 exports.showpracticeStudentSection = async (req, res) => {
     try {
@@ -308,129 +308,129 @@ exports.showpracticeStudentLesson = async (req, res) => {
     }
 }
 
-exports.recoverPassword = async (req, res) => {
-    try {
-        const { email } = req.body;
+// exports.recoverPassword = async (req, res) => {
+//     try {
+//         const { email } = req.body;
 
-        // Check if the email exists in the database (Mongoose syntax)
-        const admin = await Admin.findOne({ email: email });
-        if (!admin) {
-            return res.status(404).json({ status: false, message: 'Email not found. Please enter a registered email address.' });
-        }
+//         // Check if the email exists in the database (Mongoose syntax)
+//         const admin = await Admin.findOne({ email: email });
+//         if (!admin) {
+//             return res.status(404).json({ status: false, message: 'Email not found. Please enter a registered email address.' });
+//         }
 
-        const existingToken = await Token.findOne({ admin_id: admin._id });
-        if (existingToken) {
-            // Optional: Delete the existing token before creating a new one
-            await Token.deleteOne({ _id: existingToken._id });
-        }
+//         const existingToken = await Token.findOne({ admin_id: admin._id });
+//         if (existingToken) {
+//             // Optional: Delete the existing token before creating a new one
+//             await Token.deleteOne({ _id: existingToken._id });
+//         }
 
-        // Generate a random verification code
-        const verificationCode = Math.floor(10000 + Math.random() * 90000); // Generates a 5-digit code
+//         // Generate a random verification code
+//         const verificationCode = Math.floor(10000 + Math.random() * 90000); // Generates a 5-digit code
 
-        await Token.create({
-            admin_id: admin._id, // Associate the token with the User
-            token: verificationCode,
-            // `createdAt` is handled automatically by Mongoose schema
-        });
-
-
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-
-                user: process.env.EMAIL_USER, // Recommended to use environment variables
-
-                pass: process.env.EMAIL_PASS,
-                // Recommended to use environment variables
-            },
-        });
+//         await Token.create({
+//             admin_id: admin._id, // Associate the token with the User
+//             token: verificationCode,
+//             // `createdAt` is handled automatically by Mongoose schema
+//         });
 
 
+//         const transporter = nodemailer.createTransport({
+//             service: 'gmail',
+//             auth: {
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Verification Code for Password Recovery',
-            text: `Your verification code is: ${verificationCode}`,
-        };
+//                 user: process.env.EMAIL_USER, // Recommended to use environment variables
+
+//                 pass: process.env.EMAIL_PASS,
+//                 // Recommended to use environment variables
+//             },
+//         });
 
 
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error('Error sending email:', error);
-                return res.status(500).json({ status: false, message: 'Internal server error' });
-            }
-            console.log('Email sent:', info.response);
-            res.json({ status: true, message: 'Verification code sent successfully', verificationCode: verificationCode.toString() });
-        });
+//         const mailOptions = {
+//             from: process.env.EMAIL_USER,
+//             to: email,
+//             subject: 'Verification Code for Password Recovery',
+//             text: `Your verification code is: ${verificationCode}`,
+//         };
 
 
 
-    } catch (error) {
-        console.error('Error during password recovery:', error);
-        res.status(500).json({ status: false, message: 'Internal server error' });
-    }
-};
+//         transporter.sendMail(mailOptions, (error, info) => {
+//             if (error) {
+//                 console.error('Error sending email:', error);
+//                 return res.status(500).json({ status: false, message: 'Internal server error' });
+//             }
+//             console.log('Email sent:', info.response);
+//             res.json({ status: true, message: 'Verification code sent successfully', verificationCode: verificationCode.toString() });
+//         });
+
+
+
+//     } catch (error) {
+//         console.error('Error during password recovery:', error);
+//         res.status(500).json({ status: false, message: 'Internal server error' });
+//     }
+// };
 
 
 
 
-exports.verifyToken = async (req, res) => {
-    try {
-        const { email, codeVerification } = req.body;
+// exports.verifyToken = async (req, res) => {
+//     try {
+//         const { email, codeVerification } = req.body;
 
-        // Find the User by email
-        const admin = await Admin.findOne({ email: email });
-        if (!admin) {
-            return res.status(404).json({ status: false, message: 'Email not found.' });
-        }
+//         // Find the User by email
+//         const admin = await Admin.findOne({ email: email });
+//         if (!admin) {
+//             return res.status(404).json({ status: false, message: 'Email not found.' });
+//         }
 
-        // Find a token for the User
-        const token = await Token.findOne({ admin_id: admin._id, token: codeVerification });
-        if (!token) {
-            // If no matching token found, respond with an error status
-            return res.status(404).json({ status: false, message: 'Verification code does not match or has expired.' });
-        }
+//         // Find a token for the User
+//         const token = await Token.findOne({ admin_id: admin._id, token: codeVerification });
+//         if (!token) {
+//             // If no matching token found, respond with an error status
+//             return res.status(404).json({ status: false, message: 'Verification code does not match or has expired.' });
+//         }
 
 
-        res.status(200).json({ status: true, message: 'Verification successful.' });
-    } catch (error) {
-        console.error('Error during token verification:', error);
-        res.status(500).json({ status: false, message: 'Internal server error' });
-    }
-};
+//         res.status(200).json({ status: true, message: 'Verification successful.' });
+//     } catch (error) {
+//         console.error('Error during token verification:', error);
+//         res.status(500).json({ status: false, message: 'Internal server error' });
+//     }
+// };
 
-exports.resetPassword = async (req, res) => {
-    try {
-        const { email, newPassword, codeVerification } = req.body;
+// exports.resetPassword = async (req, res) => {
+//     try {
+//         const { email, newPassword, codeVerification } = req.body;
 
-        // Find the patient by email using Mongoose's findOne
-        const admin = await Admin.findOne({ email: email });
-        if (!admin) {
-            return res.status(404).json({ status: false, message: 'Email not found. Please enter a registered email address.' });
-        }
-        const token = await Token.findOne({ admin_id: admin._id, token: codeVerification });
-        if (!token) {
-            // If no matching token found, respond with an error status
-            return res.status(404).json({ status: false, message: 'Verification code does not match or has expired.' });
-        }
+//         // Find the patient by email using Mongoose's findOne
+//         const admin = await Admin.findOne({ email: email });
+//         if (!admin) {
+//             return res.status(404).json({ status: false, message: 'Email not found. Please enter a registered email address.' });
+//         }
+//         const token = await Token.findOne({ admin_id: admin._id, token: codeVerification });
+//         if (!token) {
+//             // If no matching token found, respond with an error status
+//             return res.status(404).json({ status: false, message: 'Verification code does not match or has expired.' });
+//         }
 
-        // Delete the token after successful verification to ensure it's used only once
-        await Token.deleteOne({ _id: token._id });
-        // Hash the new password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt); // Assuming 10 is the salt rounds
+//         // Delete the token after successful verification to ensure it's used only once
+//         await Token.deleteOne({ _id: token._id });
+//         // Hash the new password
+//         const salt = await bcrypt.genSalt(10);
+//         const hashedPassword = await bcrypt.hash(newPassword, salt); // Assuming 10 is the salt rounds
 
-        // Update the User's password with the hashed new password using Mongoose's findOneAndUpdate
-        await Admin.findOneAndUpdate(
-            { email: email },
-            { $set: { mot_de_passe: hashedPassword } } // Use $set to specify the fields to update
-        );
+//         // Update the User's password with the hashed new password using Mongoose's findOneAndUpdate
+//         await Admin.findOneAndUpdate(
+//             { email: email },
+//             { $set: { mot_de_passe: hashedPassword } } // Use $set to specify the fields to update
+//         );
 
-        return res.status(200).json({ status: true, message: 'Password reset successful' });
-    } catch (error) {
-        console.error('Error during password reset:', error);
-        return res.status(500).json({ status: false, message: 'Internal server error' });
-    }
-};
+//         return res.status(200).json({ status: true, message: 'Password reset successful' });
+//     } catch (error) {
+//         console.error('Error during password reset:', error);
+//         return res.status(500).json({ status: false, message: 'Internal server error' });
+//     }
+// };
