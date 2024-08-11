@@ -87,7 +87,7 @@ router.delete('/lesson/:id', protect, isAdmin, lessonController.deleteLesson);
 router.post('/lesson/complete', protect, lessonController.setSectionProgress);
 router.post('/lesson/user/comment/:id', protect, lessonController.addCommentUser);
 router.post('/lesson/admin/comment/:id', protect, lessonController.addCommentAdmin);
-router.get('/lesson/comments/:id', lessonController.getComments);
+router.get('/lesson/comments/:id', protect, lessonController.getComments);
 router.get('/lesson/quiz/:id', protect, lessonController.getQuiz);
 router.put('/lesson/quiz/:id', protect, isAdmin, lessonController.updateQuiz);
 router.put('/lesson/comment/:id', protect, lessonController.deleteComment);
