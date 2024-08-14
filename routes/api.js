@@ -8,7 +8,7 @@ const { protect, isAdmin } = require('../handler/auth');
 
 const router = express.Router();
 router.get('/', async (req, res) => {
-    res.json({ message: 'hellow' })
+    res.json({ message: 'helloooo' })
 
 })
 
