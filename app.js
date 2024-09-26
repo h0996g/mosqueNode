@@ -20,7 +20,8 @@ mongoose.set('strictQuery', true);
 mongoose.connect(
     process.env.MongoURI,
     // 'mongodb://127.0.0.1:27017/mosque',
-    { useNewUrlParser: true })
+    // { useNewUrlParser: true }
+)
     .then(() => {
         console.log('Connexion réussie à la base de données');
     })

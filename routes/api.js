@@ -4,6 +4,8 @@ const userController = require('../controllers/userController');
 const adminController = require('../controllers/adminController');
 const sectionController = require('../controllers/sectionController');
 const lessonController = require('../controllers/lessonController');
+// for other app Just Test
+const mealItemController = require('../controllers/prodectController');
 const { protect, isAdmin } = require('../handler/auth');
 
 const router = express.Router();
@@ -11,6 +13,13 @@ router.get('/', async (req, res) => {
     res.json({ message: 'helloooo' })
 
 })
+// for other app Just Test
+
+router.post('/mealItems', mealItemController.createMealItem);
+router.get('/mealItems', mealItemController.getMealItems);
+router.get('/mealItems/:id', mealItemController.getMealItemById);
+router.put('/mealItems/:id', mealItemController.updateMealItem);
+router.delete('/mealItems/:id', mealItemController.deleteMealItem);
 
 // users----------------------------------------------------------------
 // router.get('/user', userController.loginUser)
